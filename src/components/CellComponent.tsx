@@ -1,21 +1,25 @@
 import React, {FC} from 'react';
-import {Cell} from "../models/Cell";
+import {Cell, Checker} from "../serviceApi/models/models"
+import CheckerComponent from './CheckerComponent';
 
 interface CellProps {
   cell: Cell;
   selected: boolean;
   click: (cell: Cell) => void;
+  checkerClick: (cell: Cell) => void;
 }
 
-const CellComponent: FC<CellProps> = ({cell, selected, click}) => {
+const CellComponent: FC<CellProps> = ({cell, selected, click, checkerClick}) => {
+  const borderStyle = selected ? "dotted": "";
   return (
     <div
-      className={['cell', cell.color, selected ? "selected" : ''].join(' ')}
+      className='cell'
       onClick={() => click(cell)}
-      style={{background: cell.available && cell.figure ? 'green' : ''}}
+      style={{background: cell.color, borderBottom: borderStyle, borderTop: borderStyle}}
     >
-      {cell.available && !cell.figure && <div className={"available"}/>}
-      {cell.figure?.logo && <img src={cell.figure.logo} alt=""/>}
+      {//cell.checker == null && <div className={"available"}/>
+      }
+      {cell.checker && <CheckerComponent cell={cell} checkerClick={checkerClick}/>}
     </div>
   );
 };

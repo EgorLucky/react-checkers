@@ -1,58 +1,50 @@
-import React, {useEffect, useState} from 'react';
 import "./App.css";
-import BoardComponent from "./components/BoardComponent";
-import {Board} from "./models/Board";
-import {Player} from "./models/Player";
-import {Colors} from "./models/Colors";
-import LostFigures from "./components/LostFigures";
-import Timer from "./components/Timer";
+
+import {
+  HashRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
+
+import Menu from './components/Menu';
+import CreateGame from "./components/CreateGame";
+import JoinGame from "./components/JoinGame";
+import Game from "./components/Game";
+import ServiceApi from "./serviceApi/serviceApi";
+
+const createGameWithBotApi = {
+  createGameEndpoint: ServiceApi.GameCreateWithBot
+};
+
+const createGameWithHumanApi = {
+  createGameEndpoint: ServiceApi.GameCreateWithHuman
+};
+
+const playGameWithBotApi = {
+  startGameEndpoint: ServiceApi.GameStartWithBot,
+  moveEndpoint: ServiceApi.MoveWithBot
+};
+
+const playGameWithHumanApi = {
+  startGameEndpoint: ServiceApi.GameStartWithHuman,
+  moveEndpoint: ServiceApi.MoveWithHuman
+};
 
 const App = () => {
-  const [board, setBoard] = useState(new Board())
-  const [whitePlayer, setWhitePlayer] = useState(new Player(Colors.WHITE))
-  const [blackPlayer, setBlackPlayer] = useState(new Player(Colors.BLACK))
-  const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
-
-  useEffect(() => {
-    restart()
-    setCurrentPlayer(whitePlayer);
-  }, [])
-
-  function restart() {
-    const newBoard = new Board();
-    newBoard.initCells()
-    newBoard.addFigures()
-    setBoard(newBoard)
-  }
-
-  function swapPlayer() {
-    setCurrentPlayer(currentPlayer?.color === Colors.WHITE ? blackPlayer : whitePlayer)
-  }
-
   return (
-    <div className="app">
-      <Timer
-        restart={restart}
-        currentPlayer={currentPlayer}
-      />
-      <BoardComponent
-        board={board}
-        setBoard={setBoard}
-        currentPlayer={currentPlayer}
-        swapPlayer={swapPlayer}
-      />
-      <div>
-        <LostFigures
-          title="Черные фигуры"
-          figures={board.lostBlackFigures}
-        />
-        <LostFigures
-          title="Белые фигуры"
-          figures={board.lostWhiteFigures}
-        />
-      </div>
-    </div>
-  );
+          <div className="app">
+            <Router>
+              <Routes>
+                  <Route path="/" element={<Menu/>} />
+                  <Route path="/createGameWithBot" element={<CreateGame api={createGameWithBotApi} skipJoinGameLink={true}/>} />
+                  <Route path="/createGame" element={<CreateGame api={createGameWithHumanApi} skipJoinGameLink={false}/>} />
+                  <Route path="/joinGame/:id" element={<JoinGame/>} />
+                  <Route path="/game/:id" element={<Game skipJoinGameLink={false} api={playGameWithHumanApi}/>}/>
+                  <Route path="/game/:id/skipJoinGameLink" element={<Game skipJoinGameLink={true} api={playGameWithBotApi}/>}/>
+              </Routes>
+            </Router>
+          </div>
+        );
 };
 
 export default App;

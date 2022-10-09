@@ -56,7 +56,7 @@ class GameGetInfoResult{
     message!: string
     state!: GameState
     boardState!: BoardState
-    awaitableMove?: GamePlayer 
+    awaitableMove!: GamePlayer|null 
     winner?: GamePlayer 
 }
 
@@ -64,7 +64,7 @@ class MoveResult{
     success!: boolean;
     message!: string;
     newBoardState!: BoardState;
-    AwaitableMove!: GamePlayer|null
+    awaitableMove!: GamePlayer|null
 }
 
 class MoveVector{
@@ -95,4 +95,19 @@ enum GameState {
     Finished = "Finished"
 }
 
-export { BoardSide, GamePlayer, GameState, GameCreateDTO, GameCreateResult, GameGetInfoResult, MoveVector, MoveResult, GameStartResult, Board }
+export { 
+    BoardSide, 
+    GamePlayer, 
+    GameState, 
+    GameCreateDTO, 
+    GameCreateResult, 
+    GameGetInfoResult, 
+    MoveVector, 
+    MoveResult, 
+    GameStartResult, 
+    Board, 
+    BoardVerticalCoordinates,
+    Cell,
+    BoardHorizontalCoordinates,
+    Checker
+ }
