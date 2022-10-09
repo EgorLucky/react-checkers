@@ -12,23 +12,14 @@ class ServiceApi{
     }
 
     static async GameCreate(dto: GameCreateDTO, path: string){
-        const response = await fetch(this.host + path, {
-            body: JSON.stringify(dto),
-            headers:{
+        return ServiceApi.fetchApi<GameCreateResult>(
+            path, 
+            "POST", 
+            dto, 
+            {
                 "content-type": "application/json"
             },
-            method: "POST"
-        });
-
-        if(!response.ok){
-            const text = await response.text();
-            throw new Error(text);
-        }
-
-        const json = await response.json();
-        const result = json as GameCreateResult;
-
-        return result;
+            [200])
     }
 
     static GameStartWithHuman(firstPlayerCode: string){
@@ -40,23 +31,14 @@ class ServiceApi{
     }
 
     static async GameStart(firstPlayerCode: string, path: string){
-        const response = await fetch(this.host + path, {
-            body: JSON.stringify(firstPlayerCode),
-            headers:{
+        return ServiceApi.fetchApi<GameStartResult>(
+            path, 
+            "POST", 
+            firstPlayerCode, 
+            {
                 "content-type": "application/json"
             },
-            method: "POST"
-        });
-
-        if(!response.ok && response.status != 400){
-            const text = await response.text();
-            throw new Error(text);
-        }
-
-        const json = await response.json();
-        const result = json as GameStartResult;
-
-        return result;
+            [200, 400])
     }
 
 
@@ -69,39 +51,43 @@ class ServiceApi{
     }
 
     static async Move(playerCode: string, previousBoardStateId: string, move: MoveVector, path: string){
-        const response = await fetch(this.host + path, {
-            body: JSON.stringify(move),
-            headers:{
+        return ServiceApi.fetchApi<MoveResult>(
+            path, 
+            "POST", 
+            move, 
+            {
                 "content-type": "application/json",
                 playerCode: playerCode,
                 previousBoardStateId: previousBoardStateId
             },
-            method: "POST"
+            [200])
+    }
+
+    static async GetInfo(gameId: string){
+        return ServiceApi.fetchApi<GameGetInfoResult>(
+            "/game/getInfo?gameId=" + gameId, 
+            "GET", 
+            null, 
+            {},
+            [200, 400])
+    }
+
+    static async fetchApi<T>(path: string, method: string, body: any, headers: Record<string, string>, awaitableStatusCodes: number[]){
+        const response = await fetch(this.host + path, {
+            body: body && JSON.stringify(body),
+            headers: headers,
+            method: method
         });
 
-        if(!response.ok){
+        if(!awaitableStatusCodes.includes(response.status)){
             const text = await response.text();
             throw new Error(text);
         }
 
         const json = await response.json();
-        const result = json as MoveResult;
+        const result = json as T;
 
         return result;
-    }
-
-    static async GetInfo(gameId: string){
-        const response = await fetch(this.host + "/game/getInfo?gameId=" + gameId);
-
-        if(response.ok || response.status == 400){
-            const json = await response.json();
-
-            return json as GameGetInfoResult;
-        }
-        else{
-            const text = await response.text();
-            throw new Error(text);
-        }
     }
 }
 
