@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/react-checkers/static/css/main.0b397e71.chunk.css",
+    "main.js": "/react-checkers/static/js/main.bf5eb7e1.chunk.js",
+    "main.js.map": "/react-checkers/static/js/main.bf5eb7e1.chunk.js.map",
+    "runtime-main.js": "/react-checkers/static/js/runtime-main.b424fa36.js",
+    "runtime-main.js.map": "/react-checkers/static/js/runtime-main.b424fa36.js.map",
+    "static/js/2.1271e52f.chunk.js": "/react-checkers/static/js/2.1271e52f.chunk.js",
+    "static/js/2.1271e52f.chunk.js.map": "/react-checkers/static/js/2.1271e52f.chunk.js.map",
+    "index.html": "/react-checkers/index.html",
+    "static/css/main.0b397e71.chunk.css.map": "/react-checkers/static/css/main.0b397e71.chunk.css.map",
+    "static/js/2.1271e52f.chunk.js.LICENSE.txt": "/react-checkers/static/js/2.1271e52f.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b424fa36.js",
+    "static/js/2.1271e52f.chunk.js",
+    "static/css/main.0b397e71.chunk.css",
+    "static/js/main.bf5eb7e1.chunk.js"
+  ]
+}
