@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GameCreateDTO, GameCreateResult, BoardSide, MoveVector, MoveResult, GamePlayer} from "../../serviceApi/models/models";
+import { GameCreateDTO, GameCreateResult, BoardSide, GamePlayer} from "../../serviceApi/models/models";
 
 function CreateGame(props: { 
                             api:  {

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import ServiceApi from "../../serviceApi/serviceApi";
 import { GameGetInfoResult, GamePlayer, GameStartResult, GameState, MoveResult, MoveVector, Board } from "../../serviceApi/models/models";
 import BoardComponent from "../BoardComponent";
-import { isGetAccessor } from "typescript";
 import delay from "delay";
 import { Link } from "react-router-dom";
 
