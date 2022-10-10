@@ -95,7 +95,7 @@ function Game(props: {
           { 
             gameState === undefined && <>Getting info about game</> 
             || gameState === GameState.Created && role === GamePlayer.FirstPlayer && skipJoinGameLink && <>Wait for opponent registration</> 
-            || gameState === GameState.Created && role === GamePlayer.FirstPlayer && !skipJoinGameLink && <>Send this link to your opponent: { document.location.origin }/#/joinGame/{ id } and wait for his/her registration</>
+            || gameState === GameState.Created && role === GamePlayer.FirstPlayer && !skipJoinGameLink && <>Send this link to your opponent: { document.location.origin + document.location.pathname }#/joinGame/{ id } and wait for his/her registration</>
             || gameState === GameState.Created && role === GamePlayer.SecondPlayer && <button>Register in game</button>
             || gameState === GameState.AllPlayersRegistred && role === GamePlayer.FirstPlayer && <>Opponent has registred, waiting for opponent will be ready to play</> 
             || gameState === GameState.AllPlayersRegistred && role === GamePlayer.SecondPlayer && <button>I'm ready to play</button>
