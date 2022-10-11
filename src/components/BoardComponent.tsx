@@ -4,7 +4,7 @@ import CellComponent from "./CellComponent";
 
 interface BoardProps {
   board: Board;
-  awaitableMove: GamePlayer;
+  awaitableMove: GamePlayer | null;
   role: GamePlayer;
   makeMove: (vector: MoveVector) => Promise<any>
 }
@@ -52,7 +52,7 @@ const BoardComponent: FC<BoardProps> = ({board, awaitableMove, role, makeMove}) 
   let i = 0;
   return (
     <div>
-      <h3>Waiting for move from {awaitableMove == role ? "YOU" : "opponent"}</h3>
+      {awaitableMove && <h3>Waiting for move from {awaitableMove == role ? "YOU" : "opponent"}</h3>}
       <div className="board">
         { rows.map((row, index) =>
           <React.Fragment key={index}>

@@ -113,12 +113,16 @@ function Game(props: {
             || gameState === GameState.AllPlayersRegistred && role === GamePlayer.SecondPlayer && <button>I'm ready to play</button>
             || gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.FirstPlayer && <>Opponent is ready to play. Starting the game...</>
             || gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.SecondPlayer && <>Waiting for start of the game by game creator</>
-            || gameState === GameState.Running && <BoardComponent 
-                                                      board={gameInfo?.boardState?.board as Board} 
-                                                      awaitableMove={gameInfo?.awaitableMove as GamePlayer}
-                                                      role={role} 
-                                                      makeMove={move}/>
-            || gameState === GameState.Finished && <>Game over. {gameInfo?.winner == role? "You won": "You lose"} <br/><Link to="/">Menu</Link></>
+            || (gameState === GameState.Running|| gameState === GameState.Finished) && 
+                <>
+                  {gameState === GameState.Finished && <>Game over. {gameInfo?.winner == role? "You won": "You lose"} <br/><Link to="/">Menu</Link></>}
+                  <BoardComponent 
+                    board={gameInfo?.boardState?.board as Board} 
+                    awaitableMove={gameInfo?.awaitableMove as GamePlayer}
+                    role={role}
+                    //boardSide={gameInfo.} 
+                    makeMove={move}/>
+                </>
           }
         </div>
     );
