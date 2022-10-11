@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GameLocalStorageHelper } from "../../GameLocalStorageHelper";
 import { GameCreateDTO, GameCreateResult, BoardSide, GamePlayer} from "../../serviceApi/models/models";
 
 function CreateGame(props: { 
@@ -57,8 +58,8 @@ function CreateGame(props: {
 
       const {id, firstPlayerCode } = await api.createGameEndpoint(dto);
 
-      localStorage.setItem("gameId" + id, firstPlayerCode);
-      localStorage.setItem("role" + id, GamePlayer.FirstPlayer);
+      const storage = new GameLocalStorageHelper(localStorage)
+      storage.savePlayerCodeAndRole(firstPlayerCode, GamePlayer.FirstPlayer, id)
 
       navigate(`/game/${id}/${skipJoinGameLink ? "skipJoinGameLink" : ""}`);
     }

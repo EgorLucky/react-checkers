@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { GameLocalStorageHelper } from "../../GameLocalStorageHelper";
 import { GameGetInfoResult, GamePlayer, GameState } from "../../serviceApi/models/models";
 import ServiceApi from "../../serviceApi/serviceApi";
 
@@ -9,6 +10,7 @@ function JoinGame() {
     const [readyToPlayButtonDisabled, setReadyToPlayButtonDisabled] = useState<boolean>(false);
     const { id } = useParams();
     const navigate = useNavigate();
+    const storage = new GameLocalStorageHelper(localStorage)
 
     if(id === undefined){
       alert("wrong url");
@@ -33,9 +35,8 @@ function JoinGame() {
       setGameInfo(null);
       if(success){
         if(code == null)
-         throw new Error("code is null but success is true after gama registration");
-        localStorage.setItem("gameId" + id, code);
-        localStorage.setItem("role" + id, GamePlayer.SecondPlayer);
+         throw new Error("code is null but success is true after game registration");
+        storage.savePlayerCodeAndRole(code, GamePlayer.SecondPlayer, id)
       } 
       else{
         throw new Error(message);
@@ -44,7 +45,7 @@ function JoinGame() {
 
     const readyToPlay = async () => {
       setReadyToPlayButtonDisabled(true);
-      const code = localStorage.getItem("gameId" + id);
+      const code = storage.getPlayerCode(id);
 
       if(code == null)
         throw new Error("readyToPlay: player code is null")

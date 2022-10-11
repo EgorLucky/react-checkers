@@ -5,6 +5,7 @@ import { GameGetInfoResult, GamePlayer, GameStartResult, GameState, MoveResult, 
 import BoardComponent from "../BoardComponent";
 import delay from "delay";
 import { Link } from "react-router-dom";
+import { GameLocalStorageHelper } from "../../GameLocalStorageHelper";
 
 function Game(props: { 
                         skipJoinGameLink: boolean, 
@@ -17,8 +18,9 @@ function Game(props: {
     const { id } = useParams();
     const [ gameInfo, setGameInfo ] = useState<GameGetInfoResult | null>(null);
     const gameState = gameInfo?.state;
-    const playerCode = localStorage.getItem("gameId" + id)
-    const role = localStorage.getItem("role" + id) as GamePlayer;
+    const storage = new GameLocalStorageHelper(localStorage)
+
+    const {playerCode, role} = storage.getPlayerCodeAndRole(id as string);
 
     if(playerCode === null)
       throw new Error("player code not found");
