@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { GameGetInfoResult, GameState } from "../../serviceApi/models/models";
+import { useNavigate, useParams } from "react-router-dom";
+import { GameGetInfoResult, GamePlayer, GameState } from "../../serviceApi/models/models";
 import ServiceApi from "../../serviceApi/serviceApi";
 
 function JoinGame() {
     const [gameInfo, setGameInfo] = useState<GameGetInfoResult|null>(null);
-    //const [registerButtonDisabled, setReg]
+    const [registerButtonDisabled, setRegistrationButtonDisabled] = useState<boolean>(false);
+    const [readyToPlayButtonDisabled, setReadyToPlayButtonDisabled] = useState<boolean>(false);
     const { id } = useParams();
-      if(id === undefined){
-        alert("wrong url");
-        return;
-      }
+    const navigate = useNavigate();
+
+    if(id === undefined){
+      alert("wrong url");
+      throw new Error();
+    }
 
     useEffect(() => {
       const getGameInfo = async () => {
@@ -24,13 +27,66 @@ function JoinGame() {
     })
 
     const registerClick = async () => {
-      
+      setRegistrationButtonDisabled(true);
+      const {success, message, code} = await ServiceApi.RegisterSecondPlayer(id);
+      setRegistrationButtonDisabled(false);
+      setGameInfo(null);
+      if(success){
+        if(code == null)
+         throw new Error("code is null but success is true after gama registration");
+        localStorage.setItem("gameId" + id, code);
+        localStorage.setItem("role" + id, GamePlayer.SecondPlayer);
+      } 
+      else{
+        throw new Error(message);
+      }
+    }
+
+    const readyToPlay = async () => {
+      setReadyToPlayButtonDisabled(true);
+      const code = localStorage.getItem("gameId" + id);
+
+      if(code == null)
+        throw new Error("readyToPlay: player code is null")
+
+      const {success, message} = await ServiceApi.ReadyToPlay(code);
+      setRegistrationButtonDisabled(false);
+      setGameInfo(null);
+      if(success){
+        navigate(`/game/${id}`);
+      } 
+      else{
+        throw new Error(message);
+      }
     }
 
     return (
         <div>
           { gameInfo == null && <>Getting info about game...</> }
-          { gameInfo?.state === GameState.Created && <><button onClick={registerClick}>Register in game</button></> }
+          { 
+            gameInfo?.state === GameState.Created && 
+            <>
+              <button onClick={registerClick}
+                      disabled={registerButtonDisabled}>
+                Register in game
+              </button>
+            </> 
+          }
+          { 
+            gameInfo?.state === GameState.AllPlayersRegistred &&
+            <>
+              <button onClick={readyToPlay}
+                      disabled={readyToPlayButtonDisabled}>
+                I'm ready to play
+              </button>
+            </>
+          }
+          {
+            gameInfo && 
+            gameInfo.state != GameState.Created &&
+            gameInfo.state != GameState.AllPlayersRegistred &&
+            <>Joining complete</> 
+          }
         </div>
     );
   }

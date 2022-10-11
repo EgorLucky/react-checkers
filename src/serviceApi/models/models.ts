@@ -11,6 +11,17 @@ class GameCreateResult{
     firstPlayerCode!: string;
 }
 
+type GameRegisterSecondPlayerResult = {
+    success: boolean
+    message: string;
+    code: string | null;
+}
+
+type SetReadyToPlayResult = {
+    success: boolean
+    message: string
+}
+
 class GameStartResult{
     success!: boolean
     message!: string
@@ -95,19 +106,20 @@ enum GameState {
     Finished = "Finished"
 }
 
-export { 
-    BoardSide, 
-    GamePlayer, 
-    GameState, 
-    GameCreateDTO, 
-    GameCreateResult, 
-    GameGetInfoResult, 
-    MoveVector, 
-    MoveResult, 
-    GameStartResult, 
-    Board, 
+export {
+    BoardSide,
+    GamePlayer,
+    GameState,
+    GameCreateDTO,
+    GameCreateResult,
+    GameGetInfoResult,
+    MoveVector,
+    MoveResult,
+    GameStartResult,
+    Board,
     BoardVerticalCoordinates,
     Cell,
     BoardHorizontalCoordinates,
     Checker
- }
+};
+export type { GameRegisterSecondPlayerResult, SetReadyToPlayResult };

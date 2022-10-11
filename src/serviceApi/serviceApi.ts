@@ -1,4 +1,4 @@
-import { GameCreateDTO, GameCreateResult, GameStartResult, MoveVector, MoveResult, GameGetInfoResult } from "./models/models";
+import { GameCreateDTO, GameCreateResult, GameStartResult, MoveVector, MoveResult, GameGetInfoResult, GameRegisterSecondPlayerResult, SetReadyToPlayResult } from "./models/models";
 
 class ServiceApi{
     static host = "https://checker-game-api.egorluckydevdomain.ru";
@@ -20,6 +20,29 @@ class ServiceApi{
                 "content-type": "application/json"
             },
             [200])
+    }
+
+    static async RegisterSecondPlayer(gameId: string) {
+        return ServiceApi.fetchApi<GameRegisterSecondPlayerResult>(
+            "/game/registerSecondPlayer",
+            "POST",
+            gameId,
+            {
+                "content-type": "application/json"
+            },
+            [200, 400])
+    }
+
+    static async ReadyToPlay(playerCode: string) {
+        return ServiceApi.fetchApi<SetReadyToPlayResult>(
+            "/game/readyToPlay",
+            "POST",
+            null,
+            {
+                "content-type": "application/json",
+                playerCode: playerCode
+            },
+            [200, 400])
     }
 
     static GameStartWithHuman(firstPlayerCode: string){
