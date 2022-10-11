@@ -120,6 +120,7 @@ export {
     BoardVerticalCoordinates,
     Cell,
     BoardHorizontalCoordinates,
-    Checker
+    Checker,
+    CheckerRole
 };
 export type { GameRegisterSecondPlayerResult, SetReadyToPlayResult };
