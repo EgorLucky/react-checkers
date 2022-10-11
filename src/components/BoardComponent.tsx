@@ -52,7 +52,7 @@ const BoardComponent: FC<BoardProps> = ({board, awaitableMove, role, makeMove}) 
   let i = 0;
   return (
     <div>
-      <h3>Текущий игрок {awaitableMove}</h3>
+      <h3>Waiting for move from {awaitableMove == role ? "YOU" : "opponent"}</h3>
       <div className="board">
         { rows.map((row, index) =>
           <React.Fragment key={index}>
