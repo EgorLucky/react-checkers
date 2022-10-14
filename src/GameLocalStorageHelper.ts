@@ -21,11 +21,11 @@ export class GameLocalStorageHelper {
         this.savePlayerRole(role, gameId)
     }
 
-    getPlayerCode(gameId: string){
+    getPlayerCode = (gameId: string) => {
         const key = this.getPlayerCodeKey(gameId);
         return this.localStorage.getItem(key);
     }
-    getPlayerRole(gameId: string){
+    getPlayerRole = (gameId: string) => {
         const key = this.getRoleKey(gameId);
         return this.localStorage.getItem(key) as GamePlayer;
     }
