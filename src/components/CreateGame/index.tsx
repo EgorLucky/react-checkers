@@ -91,23 +91,26 @@ function CreateGame(props: {
             <div> 
               MyBoardSide:
               <br/>
-              <input name="MyBoardSide" 
-                      type="radio" 
-                      value={BoardSide.FirstSide}
-                      checked={myBoardSide == BoardSide.FirstSide}
-                      onChange={radioClicked}/> 
-                      FirstSide
+              <input 
+                name="MyBoardSide" 
+                type="radio" 
+                value={BoardSide.FirstSide}
+                checked={myBoardSide === BoardSide.FirstSide}
+                onChange={radioClicked}/> 
+                  FirstSide
               <br/>
-              <input name="MyBoardSide" 
-                      type="radio" 
-                      value={BoardSide.SecondSide} 
-                      checked={myBoardSide == BoardSide.SecondSide}
-                      onChange={radioClicked}/> 
-                      SecondSide
+              <input 
+                name="MyBoardSide" 
+                type="radio" 
+                value={BoardSide.SecondSide} 
+                checked={myBoardSide === BoardSide.SecondSide}
+                onChange={radioClicked}/> 
+                  SecondSide
             </div> 
-            <button disabled={createButtonDisabled} 
-                    onClick={createGameClicked}>
-                      CreateGame
+            <button 
+              disabled={createButtonDisabled} 
+              onClick={createGameClicked}>
+                CreateGame
             </button>
           </div>
     );

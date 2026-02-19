@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ServiceApi from "../../serviceApi/serviceApi";
-import { GameGetInfoResult, GamePlayer, GameStartResult, GameState, MoveResult, MoveVector, Board } from "../../serviceApi/models/models";
+import { 
+  GameGetInfoResult, 
+  GamePlayer, 
+  GameStartResult, 
+  GameState, 
+  MoveResult, 
+  MoveVector, 
+  Board 
+} from "../../serviceApi/models/models";
 import BoardComponent from "../BoardComponent";
 import delay from "delay";
 import { Link } from "react-router-dom";
@@ -22,26 +30,26 @@ function Game(props: {
 
     const {playerCode, role} = storage.getPlayerCodeAndRole(id as string);
 
-    if(playerCode === null)
+    if (!playerCode)
       throw new Error("player code not found");
 
-    if(gameState == GameState.Running && gameInfo?.boardState.board === undefined)
+    if (gameState === GameState.Running && !gameInfo?.boardState.board)
       throw new Error("board is null");
 
     useEffect(() => {
-      if(id === undefined)
+      if (!id)
         return;
       const getData = async () => {
-        if(gameState == GameState.SecondPlayerReadyToPlay && role == GamePlayer.FirstPlayer){
+        if (gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.FirstPlayer) {
           const startGameResult = await api.startGameEndpoint(playerCode)
 
-          if(!startGameResult.success)
+          if (!startGameResult.success)
             throw new Error(startGameResult.message);
 
-          if(startGameResult.awaitableMove == null)
+          if (!startGameResult.awaitableMove)
             throw new Error("awaitable move unknown");
           
-          if(startGameResult.boardState == null)
+          if (!startGameResult.boardState)
             throw new Error("boardState is null");
           
           setGameInfo({
@@ -55,11 +63,11 @@ function Game(props: {
           return;
         }
 
-        if(gameInfo?.awaitableMove === role){
+        if (gameInfo?.awaitableMove === role) {
           return;
         }
 
-        if(gameState === GameState.Finished)
+        if (gameState === GameState.Finished)
           return;
 
         const newGameInfo = await ServiceApi.GetInfo(id);
@@ -72,9 +80,9 @@ function Game(props: {
     });
 
     const move = async (vector: MoveVector) => {
-      try{
+      try {
         const moveResult = await api.moveEndpoint(playerCode, gameInfo?.boardState.id as string, vector);
-        if(!moveResult.success){
+        if(!moveResult.success) {
           throw new Error("move result is not success");
         }
 
@@ -86,7 +94,7 @@ function Game(props: {
           state: GameState.Running
         })
       }
-      catch(error){
+      catch(error) {
         console.log(error)
       }
     }
@@ -95,34 +103,44 @@ function Game(props: {
     const copyJoinGameLinkToClipBoard = () => {
       navigator.clipboard.writeText(joinGameLink)
     }
-    
+
+    const createdAndIAmFirstPlayer = gameState === GameState.Created && role === GamePlayer.FirstPlayer
+    const createdAndIAmSecondPlayer = gameState === GameState.Created && role === GamePlayer.SecondPlayer
+    const allPlayersRegistredAndIAmFirstPlayer = gameState === GameState.AllPlayersRegistred && role === GamePlayer.FirstPlayer
+    const allPlayersRegistredAndIAmSecondPlayer = gameState === GameState.AllPlayersRegistred && role === GamePlayer.SecondPlayer
+    const secondPlayerReadyToPlayAndIAmFirstPlayer = gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.FirstPlayer
+    const secondPlayerReadyToPlayAndIAmSecondPlayer = gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.SecondPlayer
+    const runningOrFinished = gameState === GameState.Running || gameState === GameState.Finished
+
     return (
         <div>
           { 
-            gameState === undefined && <>Getting info about game</> 
-            || gameState === GameState.Created && role === GamePlayer.FirstPlayer && skipJoinGameLink && <>Wait for opponent registration</> 
-            || gameState === GameState.Created && role === GamePlayer.FirstPlayer && !skipJoinGameLink && 
-              <>Send this link to your opponent: 
-                <br/>
-                { joinGameLink }
-                <br/>
-                <button onClick={copyJoinGameLinkToClipBoard}>Copy</button> 
-                <br/>and wait for his/her registration</>
-            || gameState === GameState.Created && role === GamePlayer.SecondPlayer && <button>Register in game</button>
-            || gameState === GameState.AllPlayersRegistred && role === GamePlayer.FirstPlayer && <>Opponent has registred, waiting for opponent will be ready to play</> 
-            || gameState === GameState.AllPlayersRegistred && role === GamePlayer.SecondPlayer && <button>I'm ready to play</button>
-            || gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.FirstPlayer && <>Opponent is ready to play. Starting the game...</>
-            || gameState === GameState.SecondPlayerReadyToPlay && role === GamePlayer.SecondPlayer && <>Waiting for start of the game by game creator</>
-            || (gameState === GameState.Running|| gameState === GameState.Finished) && 
+            (!gameState && <>Getting info about game</>)
+            || (createdAndIAmFirstPlayer && skipJoinGameLink && <>Wait for opponent registration</>)
+            || (createdAndIAmFirstPlayer && !skipJoinGameLink && 
+                <>Send this link to your opponent: 
+                  <br/>
+                  { joinGameLink }
+                  <br/>
+                  <button onClick={copyJoinGameLinkToClipBoard}>Copy</button> 
+                  <br/>and wait for his/her registration
+                </>
+                )
+            || (createdAndIAmSecondPlayer && <button>Register in game</button>)
+            || (allPlayersRegistredAndIAmFirstPlayer && <>Opponent has registred, waiting for opponent will be ready to play</>)
+            || (allPlayersRegistredAndIAmSecondPlayer && <button>I'm ready to play</button>)
+            || (secondPlayerReadyToPlayAndIAmFirstPlayer && <>Opponent is ready to play. Starting the game...</>)
+            || (secondPlayerReadyToPlayAndIAmSecondPlayer && <>Waiting for start of the game by game creator</>)
+            || (runningOrFinished && 
                 <>
-                  {gameState === GameState.Finished && <>Game over. {gameInfo?.winner == role? "You won": "You lose"} <br/><Link to="/">Menu</Link></>}
+                  {gameState === GameState.Finished && <>Game over. {gameInfo?.winner === role ? "You won" : "You lose"} <br/><Link to="/">Menu</Link></>}
                   <BoardComponent 
                     board={gameInfo?.boardState?.board as Board} 
                     awaitableMove={gameInfo?.awaitableMove as GamePlayer}
                     role={role}
                     //boardSide={gameInfo.} 
                     makeMove={move}/>
-                </>
+                </>)
           }
         </div>
     );

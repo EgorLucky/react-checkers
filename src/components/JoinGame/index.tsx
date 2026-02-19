@@ -12,14 +12,14 @@ function JoinGame() {
     const navigate = useNavigate();
     const storage = new GameLocalStorageHelper(localStorage)
 
-    if(id === undefined){
+    if (id === undefined) {
       alert("wrong url");
       throw new Error();
     }
 
     useEffect(() => {
       const getGameInfo = async () => {
-        if(gameInfo == null){
+        if (gameInfo == null) {
           const newGameInfo = await ServiceApi.GetInfo(id);
           setGameInfo(newGameInfo);
         }
@@ -33,12 +33,11 @@ function JoinGame() {
       const {success, message, code} = await ServiceApi.RegisterSecondPlayer(id);
       setRegistrationButtonDisabled(false);
       setGameInfo(null);
-      if(success){
-        if(code == null)
-         throw new Error("code is null but success is true after game registration");
+      if (success) {
+        if (code == null)
+          throw new Error("code is null but success is true after game registration");
         storage.savePlayerCodeAndRole(code, GamePlayer.SecondPlayer, id)
-      } 
-      else{
+      } else {
         throw new Error(message);
       }
     }
@@ -47,48 +46,47 @@ function JoinGame() {
       setReadyToPlayButtonDisabled(true);
       const code = storage.getPlayerCode(id);
 
-      if(code == null)
+      if (code == null)
         throw new Error("readyToPlay: player code is null")
 
       const {success, message} = await ServiceApi.ReadyToPlay(code);
       setRegistrationButtonDisabled(false);
       setGameInfo(null);
-      if(success){
+      if (success) {
         navigate(`/game/${id}`);
-      } 
-      else{
+      } else {
         throw new Error(message);
       }
     }
 
     return (
-        <div>
-          { gameInfo == null && <>Getting info about game...</> }
-          { 
-            gameInfo?.state === GameState.Created && 
-            <>
-              <button onClick={registerClick}
-                      disabled={registerButtonDisabled}>
-                Register in game
-              </button>
-            </> 
-          }
-          { 
-            gameInfo?.state === GameState.AllPlayersRegistred &&
-            <>
-              <button onClick={readyToPlay}
-                      disabled={readyToPlayButtonDisabled}>
-                I'm ready to play
-              </button>
-            </>
-          }
-          {
-            gameInfo && 
-            gameInfo.state != GameState.Created &&
-            gameInfo.state != GameState.AllPlayersRegistred &&
-            <>Joining complete</> 
-          }
-        </div>
+      <div>
+        { !gameInfo && <>Getting info about game...</> }
+        { 
+          gameInfo?.state === GameState.Created && 
+          <>
+            <button onClick={registerClick}
+                    disabled={registerButtonDisabled}>
+              Register in game
+            </button>
+          </> 
+        }
+        { 
+          gameInfo?.state === GameState.AllPlayersRegistred &&
+          <>
+            <button onClick={readyToPlay}
+                    disabled={readyToPlayButtonDisabled}>
+              I'm ready to play
+            </button>
+          </>
+        }
+        {
+          gameInfo && 
+          gameInfo.state !== GameState.Created &&
+          gameInfo.state !== GameState.AllPlayersRegistred &&
+          <>Joining complete</> 
+        }
+      </div>
     );
   }
 

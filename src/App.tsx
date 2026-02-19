@@ -32,19 +32,19 @@ const playGameWithHumanApi = {
 
 const App = () => {
   return (
-          <div className="app">
-            <Router>
-              <Routes>
-                  <Route path="/" element={<Menu/>} />
-                  <Route path="/createGameWithBot" element={<CreateGame api={createGameWithBotApi} skipJoinGameLink={true}/>} />
-                  <Route path="/createGame" element={<CreateGame api={createGameWithHumanApi} skipJoinGameLink={false}/>} />
-                  <Route path="/joinGame/:id" element={<JoinGame/>} />
-                  <Route path="/game/:id" element={<Game skipJoinGameLink={false} api={playGameWithHumanApi}/>}/>
-                  <Route path="/game/:id/skipJoinGameLink" element={<Game skipJoinGameLink={true} api={playGameWithBotApi}/>}/>
-              </Routes>
-            </Router>
-          </div>
-        );
+    <div className="app">
+      <Router>
+        <Routes>
+            <Route path="/" element={<Menu/>} />
+            <Route path="/createGameWithBot" element={<CreateGame api={createGameWithBotApi} skipJoinGameLink={true}/>} />
+            <Route path="/createGame" element={<CreateGame api={createGameWithHumanApi} skipJoinGameLink={false}/>} />
+            <Route path="/joinGame/:id" element={<JoinGame/>} />
+            <Route path="/game/:id" element={<Game skipJoinGameLink={false} api={playGameWithHumanApi}/>}/>
+            <Route path="/game/:id/skipJoinGameLink" element={<Game skipJoinGameLink={true} api={playGameWithBotApi}/>}/>
+        </Routes>
+      </Router>
+    </div>
+  );
 };
 
 export default App;

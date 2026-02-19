@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import {Cell, Checker} from "../serviceApi/models/models"
+import {FC} from 'react';
+import {Cell} from "../serviceApi/models/models"
 import CheckerComponent from './CheckerComponent';
 
 interface CellProps {
